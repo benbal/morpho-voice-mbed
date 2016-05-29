@@ -11,12 +11,13 @@
 #include "commandeAx.h"
 #include "selectionfonction.h"
 int main() {
-//pc.read(c,1,, &a, 77);
 ax.baud(vitesseAx);
 pc.baud(vitessePc);
 pc.attach(&fonctionserial);
 ax.attach(&fonctionSerialAx);
 selectionRxTx=0;
+/*FILE* fichier = NULL;
+fichier = fopen("test.txt", "r+");*/
 /*char szNumbers[] = "B";
   char * pEnd;
   long int li1, li2, li3, li4;
