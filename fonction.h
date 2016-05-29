@@ -1,3 +1,6 @@
+#ifndef DEF_NOMDUFICHIER 
+#define DEF_NOMDUFICHIER 
+
 //--------------------------------------------------------------------------
 //envoie une trame a AX-12A
 void envoieTrameAx12(char bufferenvoie[100]){
@@ -137,3 +140,5 @@ char check(char bufferreception [17]){
     char somme=(somme2%128);
     return (somme);
 }
+/* Contenu de votre fichier .h (autres include, prototypes, define...) */
+#endif 
