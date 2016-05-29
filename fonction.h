@@ -1,15 +1,13 @@
-#ifndef DEF_NOMDUFICHIER 
-#define DEF_NOMDUFICHIER 
 //--------------------------------------------------------------------------
 void envoieTrameAx12(char bufferenvoie[100],DigitalOut selectionRxTx){
-    //envoie une trame a AX-12A
+//envoie une trame a AX-12A
     selectionRxTx=1;
     wait(0.0000024);
     char longeurTrame = bufferenvoie[3]+4;
     for(int b=0;b<longeurTrame;b++){ 
         /*while(pc.writeable()==0){
         }*/   
-        pc.putc(bufferenvoie[b]);  
+        ax.putc(bufferenvoie[b]);  
     }
     wait(0.000030);
     selectionRxTx=0;
@@ -17,7 +15,7 @@ void envoieTrameAx12(char bufferenvoie[100],DigitalOut selectionRxTx){
 //--------------------------------------------------------------------------
 void envoieTramePc(char bufferenvoie[17]){
     //envoie une trame a Pc
-    for(int b=0;b<sizeof(bufferenvoiePc);b++){ 
+    for(int b=0;b<sizeof(bufferenvoie);b++){ 
         /*while(pc.writeable()==0){
         }*/     
         pc.putc(bufferenvoie[b]);
@@ -83,26 +81,9 @@ unsigned int charToInt(char donneesAConvertire[], char debutDonnees,char finDonn
     return (decimalTotal);
 }
 //--------------------------------------------------------------------------
-unsigned int degreToLong(unsigned int degrees){
-    //transforme un entier en degre 0->300° en long de 0->1024
-    unsigned int longDegrees;
-    longDegrees=floor((degrees)/0.29296875);
-    if(longDegrees==1024){
-        longDegrees--;   
-    }
-    return (longDegrees);
-}
-//--------------------------------------------------------------------------
-unsigned int longToDegre(unsigned int longDegrees){
-    //transforme un long de 0->1024 entier en degre 0->300°  
-    unsigned int degrees;
-    degrees=floor((longDegrees)*0.29296875);
-    return (degrees);
-}
-//--------------------------------------------------------------------------
 void intToChar(char donneesAConvertire[],unsigned int degrees){
-    //tranforme 3 char en unsigned int tel que ex:0x303135303030 => 0150,00
-    //a mettre aux propre
+//tranforme unsigned int en 3 char tel que ex:0150,00 => 0x00 0x01 0x05 0x00 0x00 0x0
+//a mettre au propre
     float us1=0,us2=0,us3=0,us4=0;
     float ux1=0,ux2=0,ux3=0;
     us1=degrees/1000;
@@ -120,10 +101,37 @@ void intToChar(char donneesAConvertire[],unsigned int degrees){
     donneesAConvertire[5]=0;
 }
 //--------------------------------------------------------------------------
+unsigned int degreToLong(unsigned int degrees){
+//transforme un entier en degre 0->300° en long de 0->1024
+    unsigned int longDegrees;
+    longDegrees=floor((degrees)/0.29296875);
+    if(longDegrees<=1024){
+        longDegrees=1023;   
+    }
+    return (longDegrees);
+}
+//--------------------------------------------------------------------------
+unsigned int longToDegre(unsigned int longDegrees){
+    //transforme un long de 0->1024 entier en degre 0->300°  
+    unsigned int degrees;
+    degrees=floor((longDegrees)*0.29296875);
+    return (degrees);
+}
+//--------------------------------------------------------------------------
+unsigned char intToShort(unsigned int mouvement){
+//transforme un entier en degre 0->100 en short de 0->127
+    unsigned char longDegrees;
+    longDegrees=floor((mouvement)*1.27);
+    if(longDegrees<=128){
+        longDegrees=127;   
+    }
+    return (longDegrees);
+}
+//--------------------------------------------------------------------------
 char checkSum2(char debutElement,char finElement, char element[50]){
 //calcul le checksum trame ax
- int somme=0;
-for (char i=debutElement;i<finElement;i++){
+    int somme=0;
+    for (char i=debutElement;i<finElement;i++){
     somme+=element[i];
     somme%= 256;
     }
@@ -140,4 +148,4 @@ char check(char bufferreception [17]){
     char somme=(somme2%128);
     return (somme);
 }
-#endif 
+//--------------------------------------------------------------------------

@@ -53,10 +53,27 @@ trame commandeActionAx(trame trameStandard){
 //--------------------------------------------------------------------------
 trame commandeSyncWriteAx(trame trameStandard){
     //config commande sync write pour Ax
-    if(trameStandard.instruction){
-    }
+    unsigned int decimalNumber=0;
+    //parametre
     trameStandard.instruction=indexCommandeSyncWrite;
-    trameStandard.nParametres=0;
+    trameStandard.parametres[0]=0x1E;
+    trameStandard.parametres[1]=0x02;
+    decimalNumber = charToInt(trameStandard.parametres,0,3);
+    decimalNumber = degreToLong(decimalNumber);
+    
+    if(trameStandard.nParametres>0){
+    trameStandard.parametres[2]=trameStandard.id;   
+    trameStandard.parametres[3]=decimalNumber;
+    trameStandard.parametres[4]=decimalNumber>>8;
+    trameStandard.nParametres=5;
+    }
+    else{
+        trameStandard.parametres[trameStandard.nParametres]=trameStandard.id;   
+        trameStandard.parametres[trameStandard.nParametres+1]=decimalNumber;
+        trameStandard.parametres[trameStandard.nParametres+2]=decimalNumber>>8;
+        trameStandard.nParametres+=3; 
+    }
+    trameStandard.id=0xFE; //broadcasting
     return (trameStandard);
 }
 //--------------------------------------------------------------------------
@@ -103,6 +120,13 @@ trame commandeReadPc(trame trameStandard){
     return (trameStandard);
 }
 //--------------------------------------------------------------------------
+unsigned char commandeMouvementMoteur(trame trameStandard){
+//config commande mouvement pour le moteur
+    unsigned char mouvementMoteur;
+    mouvementMoteur=intToShort(charToInt(trameStandard.parametres,0,3));
+    return (mouvementMoteur);
+}
+//--------------------------------------------------------------------------
 void creeTrameAx(trame trameEnvoieAx,char trameEnvoie[]){
     //cree la trame Ax
     trameEnvoie[0]=0xFF;
@@ -119,7 +143,7 @@ void creeTrameAx(trame trameEnvoieAx,char trameEnvoie[]){
 }
 //--------------------------------------------------------------------------
 void creeTramePc(trame trameEnvoiePc,char trameEnvoie[]){
-    //cree la trame Pc avec une trame standard
+    //cree la trame Pc avec une trame standard 
     trameEnvoie[0]=0x24;
     trameEnvoie[1]=trameEnvoiePc.groupe;
     trameEnvoie[2]=0x3A;

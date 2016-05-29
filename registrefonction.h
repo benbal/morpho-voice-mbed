@@ -1,4 +1,5 @@
 //registre general des fonction
+//A REFAIRE
 void fonctionAx(char [9]);
 void envoieTrameAx12(char bufferenvoie[100],DigitalOut selectionRxTx, Serial);
 void fonctionserial ();

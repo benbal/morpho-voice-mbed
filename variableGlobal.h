@@ -15,6 +15,7 @@ int vitesseAx=vitesseAX;
 short lenght=5;
 short intruction=6;
 int m=0;
+//types perso
 typedef struct Adresse Adresse;
 struct Adresse{
     char adresse;
@@ -27,7 +28,7 @@ struct ax12A
      Adresse goalPosition;
      Adresse moving;  
 };
-//trame pour simplifier la programation simplifier
+//format trame pour simplifier la programation 
 typedef struct trame trame;
 struct trame
 {   
@@ -38,5 +39,6 @@ struct trame
     char parametres[10];
     char controleErreur;
 };
+trame trameSyncWrite;
 bool b=false;
  

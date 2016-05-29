@@ -8,30 +8,27 @@
 #include "variableGlobal.h"
 #include "reglage.h"
 #include "fonction.h"
-#include "commandeAx.h"
+#include "commande.h"
 #include "selectionfonction.h"
 int main() {
-ax.baud(vitesseAx);
-pc.baud(vitessePc);
-pc.attach(&fonctionserial);
-ax.attach(&fonctionSerialAx);
-selectionRxTx=0;
-trame trameSyncWrite;
-/*FILE* fichier = NULL;
-fichier = fopen("test.txt", "r+");*/
-/*char szNumbers[] = "B";
-  char * pEnd;
-  long int li1, li2, li3, li4;
-  li1=strtol (szNumbers,&pEnd,16);
-  int i ;
-  i=int (szNumbers);
-  
-  printf ("The decimal equivalents are: %ld %i\n",li1 ,i);*/
-  
+//reglage 
+    ax.baud(vitesseAx);
+    pc.baud(vitessePc);
+    mp.baud(vitessePc);
+    pc.attach(&fonctionserial);
+    ax.attach(&fonctionSerialAx);
+    selectionRxTx=0;
+/*CODE RESERVE
+FILE* fichier = NULL;
+fichier = fopen("test.txt", "r+");
+char szNumbers[] = "B";
+char * pEnd;
+long int li1, li2, li3, li4;
+li1=strtol (szNumbers,&pEnd,16);
+int i ;
+i=int (szNumbers);*/
     while(1){
-        
-   
+        //pas de code ici
     }
     
 }
-//$A00;

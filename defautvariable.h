@@ -6,6 +6,8 @@
         #define vitessePC 115200; 
     //serial canal 1:ax-12A
         #define vitesseAX 1000000;
+    //serial canal 1:ax-12A
+        #define vitesseMP 9600;
 //buffer
     //buffer à zero
         #define setZero {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
@@ -64,6 +66,7 @@
     //SyncWrite
         #define indexCommandeSyncWritePc 0x83;
 //index des adresse ax12A
+//a complet et integer au code 
     //position
         #define indexAdresseGoalPosition 0x1E;
     //vitesse
