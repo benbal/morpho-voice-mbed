@@ -1,14 +1,12 @@
 #include "mbed.h"
 #include "Serial.h"
-//#include "buffered_serial.h"
-DigitalOut LedV(p21),LedR(p22),Led1(LED1)/*,Led2(LED2),Led3(LED3),Led4(LED4)*/;
-//InterruptIn button(p5);
-Serial pc(p9,p10 );//USBRX
-//Buffer pcbuffer(USBTX, USBRX);
-//unsigned char c [1]={};
-char buffer[9]={0xFF,0xFF,0x06,0x05,0x03,0x1E,0x00,0x02,0xD1};
-int vitesse=1000000;
-char id=6;
+char bufferrecption[9]={0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+int position=0;
+bool confirme =false;
+char buffer[9]={0xFF,0xFF,0x06,0x05,0x03,0x1E,0x00,0x00,0x00};
+int vitessepc=9600;
+int vitesseax=1000000;
+char id= 6;
 short lenght=5;
 short intruction=6;
 int m=0;
@@ -17,24 +15,60 @@ int m=0;
  
  //int test[] = { 1 , 2 ,3  ,4  , 5 };
  bool b=false;
-/*void a (){
-    //pc.putc(pc.getc());
-    short op=pc.getc();
-    //pc.putc(op);
-    //pc.printf("Ma variable=%.hu  \\ \n\r ",op);
-
-} */
-int main() {
-     //pc.read(c,1,, &a, 77);
-    id = (short) id;
-    pc.baud(vitesse);
-    //pc.attach(&a);
-    while(1){
+//serial
+    //serial canal 0:pc
+        Serial pc(USBTX,USBRX);
+    //serial canal 1:ax-12A
+        Serial ax(p9,p10 );
+//
+void positionvoulue(char test[9]){
+  //pc.putc(0x44);
+  buffer[6]=test[3];
+  buffer[7]=test[2];
+  long somme=buffer[2]+buffer[3]+buffer[4]+buffer[5]+buffer[6]+buffer[7];
+    char somme2=~(somme%256);
+    buffer [8]=somme2;
     for(int b=0;b<sizeof(buffer);b++){ 
-        /*while(pc.writeable()==0){
-        }     */
-        pc.putc(buffer[b]);
-    }
-    wait(2);
+        while(pc.writeable()==0){
+        }     
+        ax.putc(buffer[b]);
+     }
+}
+ 
+ 
+ 
+ void selection(char test[9]){
+    if(test[1]==0x41){
+        positionvoulue(test);
     }
 }
+void fonctionserial (){
+    //pc.putc(0x42);
+    char octotrecu=pc.getc();
+    if (octotrecu==0x24){
+        confirme=true;
+    }
+    if (confirme==true){
+        bufferrecption[position]=octotrecu;
+    }
+    if (octotrecu==0x3B){
+        pc.putc(bufferrecption[1]);
+        position=-1;
+        confirme=false;
+        selection(bufferrecption);
+       
+    }
+    position++;
+} 
+int main() {
+     //pc.read(c,1,, &a, 77);
+    ax.baud(vitesseax);
+    pc.baud(vitessepc);
+    pc.attach(&fonctionserial);
+    
+    while(1){
+   
+    }
+    
+}
+//$A00;
