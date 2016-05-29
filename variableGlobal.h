@@ -15,6 +15,10 @@ int vitesseAx=vitesseAX;
 short lenght=5;
 short intruction=6;
 int m=0;
+float moyenne;
+float tempsEnSecondeAttenduEntreChaqueEchantillon = 0.1;
+float tableauPressions[10];
+unsigned char poiteurpression;
 //types perso
 typedef struct Adresse Adresse;
 struct Adresse{

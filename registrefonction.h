@@ -8,3 +8,6 @@ char check(char [17]);
 void fonctionPc(char test[]);
 char checkSum2(char,char,char[50]);
 unsigned int degreToLong(unsigned int degrees);
+void tempsMort();
+void les10PremieresValeurs();
+float lectureEtMesure();

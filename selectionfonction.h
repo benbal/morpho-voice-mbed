@@ -101,7 +101,15 @@ void fonctionAx(char bufferenvoie[]){
                         break;
                 case '2':
                         //commande read capteur de pression
-                        //code a implementer
+                        trameStandard=commandePingPc(trameStandard);
+                        unsigned char test45;
+                        creeTramePc(trameStandard,trameEnvoie);
+                        pc.putc(0x99);
+                        //test45=moyenne;
+                        test45=15;
+                        trameEnvoie[8];
+                        envoieTramePc(trameEnvoie);
+                        
                        break;
             }
         }

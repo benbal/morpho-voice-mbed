@@ -1,4 +1,38 @@
 //--------------------------------------------------------------------------
+float lectureEtMesure(AnalogIn SignalDePressionAmplifie){
+    //prise de mesure 
+    float coeff,coeff2;
+    coeff= 0.0008056640;
+    coeff2= 32.02481923;
+    unsigned int pressionNumerique;
+    float TensionP20, V,PressionEnHpa;
+    pressionNumerique = SignalDePressionAmplifie.read_u16();
+    V = pressionNumerique;
+    TensionP20 = (V/16) * coeff;
+    PressionEnHpa= TensionP20*coeff2;
+    return PressionEnHpa;
+}
+//--------------------------------------------------------------------------
+void les10PremieresValeurs(AnalogIn SignalDePressionAmplifie){
+//set 10 tableau de presion
+    for(poiteurpression=0;poiteurpression<10;poiteurpression++){
+        tableauPressions[poiteurpression]= lectureEtMesure(SignalDePressionAmplifie);
+    }
+}
+
+//--------------------------------------------------------------------------
+void tempsMort(AnalogIn SignalDePressionAmplifie){
+       float somme;
+       unsigned char x;
+       tableauPressions[poiteurpression%10]= lectureEtMesure(SignalDePressionAmplifie);
+       for(x=0;x<10;x++){
+           somme = tableauPressions[x] + somme;
+        }
+       moyenne = somme/10;
+       somme=0;
+       poiteurpression++;
+}
+//--------------------------------------------------------------------------
 trame commandePingAx(trame trameStandard){
     //config commande ping pour Ax
     trameStandard.instruction=indexCommandePing;

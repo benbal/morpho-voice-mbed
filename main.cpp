@@ -7,19 +7,30 @@
 #include "defautvariable.h"
 #include "variableGlobal.h"
 #include "reglage.h"
+#include "test.h"
 #include "fonction.h"
 #include "commande.h"
 #include "selectionfonction.h"
 int main() {
 //reglage 
-    ax.baud(vitesseAx);
-    pc.baud(vitessePc);
-    mp.baud(vitessePc);
-    pc.attach(&fonctionserial);
-    ax.attach(&fonctionSerialAx);
-    selectionRxTx=0;
-    finDeCourse.rise(&fonctionFinDeCourse);
-    finDeCourse2.rise(&fonctionFinDeCourse);
+selectionRxTx=0;
+    //reglage vitesse serial
+        ax.baud(vitesseAx);
+        pc.baud(vitessePc);
+        mp.baud(vitessePc);
+    //reglage fonction de call back
+        //communication
+        pc.attach(&fonctionserial);
+        ax.attach(&fonctionSerialAx);
+        //fin de capteur course
+        finDeCourse.rise(&fonctionFinDeCourse);
+        finDeCourse2.rise(&fonctionFinDeCourse);
+        //Appel du tempsEcoule
+        //float tempsEnSecondeAttenduEntreChaqueEchantillon = 0.1;
+        tempsEcoule.attach(&tempsMort,tempsEnSecondeAttenduEntreChaqueEchantillon);
+    //Appel de la fonction qui initialise les 10 premières valeurs du Capteur
+        les10PremieresValeurs();
+    
 /*CODE RESERVE
 FILE* fichier = NULL;
 fichier = fopen("test.txt", "r+");

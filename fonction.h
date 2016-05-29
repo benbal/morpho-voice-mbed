@@ -15,7 +15,7 @@ void envoieTrameAx12(char bufferenvoie[100],DigitalOut selectionRxTx){
 //--------------------------------------------------------------------------
 void envoieTramePc(char bufferenvoie[17]){
     //envoie une trame a Pc
-    for(int b=0;b<sizeof(bufferenvoie);b++){ 
+    for(int b=0;b<17/*sizeof(bufferenvoie)*/;b++){ 
         /*while(pc.writeable()==0){
         }*/     
         pc.putc(bufferenvoie[b]);
