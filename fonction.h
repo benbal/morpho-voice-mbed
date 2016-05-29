@@ -3,7 +3,7 @@
 
 //--------------------------------------------------------------------------
 //envoie une trame a AX-12A
-void envoieTrameAx12(char bufferenvoie[100]){
+void envoieTrameAx12(char bufferenvoie[100],DigitalOut selectionRxTx){
     selectionRxTx=1;
     wait(0.0000024);
     char longeurTrame = bufferenvoie[3]+4;

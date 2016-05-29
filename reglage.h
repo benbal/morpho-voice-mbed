@@ -7,14 +7,4 @@
     //serial canal 1:ax-12A
         Serial ax(p9,p10 );
 //Sortie Digital
-        DigitalOut selectionRxTx (p21);
-    
-
-                        
-            
-            
-            
-            
-            
-            
-            
+        DigitalOut selectionRxTx (p21);    

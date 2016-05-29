@@ -10,10 +10,10 @@
 #include "fonction.h"
 #include "selectionfonction.h"
 int main() {
-   memoireAx06.goalPosition.adresse=0x1e;
+memoireAx06.goalPosition.adresse=0x1e;
      //pc.read(c,1,, &a, 77);
-ax.baud(vitesseax);
-pc.baud(vitessepc);
+ax.baud(vitesseAx);
+pc.baud(vitessePc);
 pc.attach(&fonctionserial);
 ax.attach(&fonctionSerialAx);
 selectionRxTx=0;
