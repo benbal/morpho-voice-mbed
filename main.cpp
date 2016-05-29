@@ -1,5 +1,5 @@
 #include "mbed.h"
-//#include "Serial.h"
+#include "Serial.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -10,12 +10,13 @@
 #include "fonction.h"
 #include "selectionfonction.h"
 int main() {
+   memoireAx06.goalPosition.adresse=0x1e;
      //pc.read(c,1,, &a, 77);
 ax.baud(vitesseax);
 pc.baud(vitessepc);
-pc.attach(&fonctionserial, Serial::RxIrq);
-ax.attach(&fonctionserialax);
-selectionRxTx=1;
+pc.attach(&fonctionserial);
+ax.attach(&fonctionSerialAx);
+selectionRxTx=0;
 /*char szNumbers[] = "B";
   char * pEnd;
   long int li1, li2, li3, li4;

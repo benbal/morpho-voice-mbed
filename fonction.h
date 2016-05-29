@@ -1,72 +1,33 @@
 //--------------------------------------------------------------------------
 //envoie une trame a AX-12A
-void envoieTrame(){
+void envoieTrameAx12(char bufferenvoie[100]){
     selectionRxTx=1;
-    unsigned int decimalNumber;
-    bufferenvoie[5]=0x1E;
-    bufferenvoie[2]=bufferreception[3];
-    decimalNumber = charToInt(bufferreception[8],bufferreception[9],bufferreception[10]);
-    bufferenvoie[6]=decimalNumber;
-    bufferenvoie[7]=decimalNumber>>8;
-    bufferenvoie [8]=checkSum(bufferenvoie[2],bufferenvoie[3],bufferenvoie[4],
-                              bufferenvoie[5],bufferenvoie[6],bufferenvoie[7]);
-    for(int b=0;b<sizeof(bufferenvoie);b++){ 
+    wait(0.0000024);
+    char longeurTrame = bufferenvoie[3]+4;
+    for(int b=0;b<longeurTrame;b++){ 
         /*while(pc.writeable()==0){
         }*/     
         ax.putc(bufferenvoie[b]);
     }
-    wait(0.001);
-    selectionRxTx=0;
-}
-//--------------------------------------------------------------------------
-//envoie une trame a AX-12A
-void envoieTrame2(){
-    selectionRxTx=1;
-    unsigned int decimalNumber;
-    bufferenvoie[5]=0x20;
-    bufferenvoie[2]=bufferreception[3];
-    decimalNumber = charToInt(bufferreception[8],bufferreception[9],bufferreception[10]);
-    bufferenvoie[6]=decimalNumber;
-    bufferenvoie[7]=decimalNumber>>8;
-    bufferenvoie [8]=checkSum(bufferenvoie[2],bufferenvoie[3],bufferenvoie[4],
-                              bufferenvoie[5],bufferenvoie[6],bufferenvoie[7]);
-    for(int b=0;b<sizeof(bufferenvoie);b++){ 
-        /*while(pc.writeable()==0){
-        }*/     
-        ax.putc(bufferenvoie[b]);
-    }
-    wait(0.001);
-    selectionRxTx=0;
-    
-}
-//--------------------------------------------------------------------------
-//envoie une trame a AX-12A
-void envoieTrame3(){
-    selectionRxTx=1;
-    wait(0.000001);
-    unsigned int decimalNumber;
-    //bufferenvoie2[5]=0x02;
-    //bufferenvoie2[2]=bufferreception[3];
-    //decimalNumber = charToInt(bufferreception[8],bufferreception[9],bufferreception[10]);
-    bufferenvoie2[5]=0x00;
-    bufferenvoie2[6]=0x00;
-    bufferenvoie2[7]=0x00;
- 
-    bufferenvoie2 [8]=checkSum(bufferenvoie2[2],bufferenvoie2[3],bufferenvoie2[4],
-                              bufferenvoie2[5],bufferenvoie2[6],bufferenvoie2[7]);
-    bufferenvoie2[5]=bufferenvoie2 [8];
-    for(int b=0;b<6;b++){ 
-        /*while(pc.writeable()==0){
-        }*/     
-        ax.putc(bufferenvoie2[b]);
-    }
-    wait(0.000020);
+    wait(0.000030);
     selectionRxTx=0;
 }
 
 //--------------------------------------------------------------------------
+//envoie une trame a Pc
+void envoieTramePc(char bufferenvoie[17]){
+    
+    
+    for(int b=0;b<sizeof(bufferenvoiePc);b++){ 
+        /*while(pc.writeable()==0){
+        }*/     
+        pc.putc(bufferenvoie[b]);
+    }
+    
+}
+//--------------------------------------------------------------------------
 void fonctionserial (){
-//fonction callback enregitre tram   
+//fonction callback enregitre tram pc   
     char octotrecu=pc.getc();
     //pc.putc(octotrecu);
     if (octotrecu==0x24){
@@ -75,29 +36,57 @@ void fonctionserial (){
     if (confirme==true){
         bufferreception[position]=octotrecu;
     }
-    if (octotrecu==0x26){
+    if (octotrecu==0x26 && confirme==true){
         //pc.putc(bufferreception[1]);
         position=-1;
         confirme=false;
-        selection(bufferreception);
+        fonctionAx(bufferreception);
     }
     position++;
 } 
 
 //--------------------------------------------------------------------------
-void fonctionserialax (){
-//fonction callback enregitre tram   
-  
-    char octotrecu=ax.getc();
+void fonctionSerialAx (){
+//fonction callback enregitre tram ax 
+   /* pc.putc(lenghttrameax);
+    pc.putc(conp);*/
     
-   pc.printf("%X \n\r",octotrecu);
-   if (c==false){
+    char octotrecu=ax.getc();
+    pc.putc(octotrecu);
     if (octotrecu==0xFF){
-          if (octotrecu==0xFF){
-              
-              }     
+        pc.putc(0x80);
+        //pc.putc(octotrecu);
+        confirme2=true;
+        lenghttrameax=2;
+        
     }
+    else if  (confirme2==true && conp==1){
+        pc.putc(0x81);
+        bufferenvoie3[conp]=octotrecu;
+        lenghttrameax+=octotrecu;
+        conp++;
     }
+    else if (confirme2==true && conp<(lenghttrameax-1)){
+        pc.putc(0x82);
+        bufferenvoie3[conp]=octotrecu;
+        conp++;
+    }
+    else if(confirme2==true && conp==(lenghttrameax-1)){
+       pc.putc(0x83);
+       //pc.putc(octotrecu);
+       bufferenvoie3[conp]=octotrecu;
+       
+       confirme2=false;
+       conp=0;
+       fonctionPc(bufferenvoie3);
+    }
+    else{
+        pc.putc(0x84);
+        
+        confirme2=false;
+        conp=0;
+    }
+    
 } 
 
 //--------------------------------------------------------------------------
@@ -109,8 +98,6 @@ unsigned int charToInt( unsigned int decimalNumber1,unsigned int decimalNumber2,
     decimalNumber3=(decimalNumber3-0x30); 
     //cut eventuel
     decimalNumber4=floor((decimalNumber1+decimalNumber2+decimalNumber3)/0.29296875);
-    /*pc.putc(decimalNumber4);
-    pc.putc(decimalNumber4>>8);*/
     if(decimalNumber4==1024){
         decimalNumber4--;   
     }
@@ -124,14 +111,29 @@ char checkSum(char element1,char element2,char element3,char element4,char eleme
     return (somme);
 }
 //--------------------------------------------------------------------------
-char check(){
+char checkSum2(char stopElement, char element[50]){
+//calcul le checksum  
+ char somme=0;
+/* for(int b=0;b<9;b++){ 
+        pc.putc(element[b]);
+    }   
+ pc.putc(stopElement);*/
+for (char i=0;i<stopElement;i++){
+    somme+=element[i];
+    somme%= 256;
+    }
+    somme=~somme;
+    //pc.putc(somme);
+    return (somme);
+}
+//--------------------------------------------------------------------------
+char check(char bufferreception [17]){
 //calcul le checksum
 
     int somme2=0;
     for(int b=0;b<=14;b++){ 
         somme2+=bufferreception[b];
-    }
-    
+    }   
     char somme=(somme2%128);
     return (somme);
 }
