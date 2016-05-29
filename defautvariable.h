@@ -3,7 +3,7 @@
 */
 //serial
     //serial canal 0:pc
-        #define vitessePC 9600; 
+        #define vitessePC 115200; 
     //serial canal 1:ax-12A
         #define vitesseAX 1000000;
 //buffer

@@ -51,6 +51,15 @@ trame commandeActionAx(trame trameStandard){
     return (trameStandard);
 }
 //--------------------------------------------------------------------------
+trame commandeSyncWriteAx(trame trameStandard){
+    //config commande sync write pour Ax
+    if(trameStandard.instruction){
+    }
+    trameStandard.instruction=indexCommandeSyncWrite;
+    trameStandard.nParametres=0;
+    return (trameStandard);
+}
+//--------------------------------------------------------------------------
 trame commandePingPc(trame trameStandard){
     //config commande ping pour Ax
     trameStandard.nParametres=6;
@@ -58,12 +67,12 @@ trame commandePingPc(trame trameStandard){
     trameStandard.instruction=0x00;
     return (trameStandard);
 }
+
 //--------------------------------------------------------------------------
-trame commandeError(trame trameStandard){
+trame commandeErrorPc(trame trameStandard){
     //config commande ping pour Ax
     trameStandard.nParametres=6;
     trameStandard.groupe=indexCommandePingPc;
-    pc.putc(0x42);
     if(trameStandard.parametres[0]<0x09){
         trameStandard.parametres[4]=0x09;
         trameStandard.parametres[5]=trameStandard.parametres[0];
@@ -150,6 +159,7 @@ trame trameAxToTrameStandard(char bufferenvoie[]){
     trame trameStandard;
     trameStandard.groupe=0;
     trameStandard.id=bufferenvoie[0];
+    pc.putc(bufferenvoie[1]-1);
     trameStandard.nParametres=bufferenvoie[1]-1;
     for(char x=0;x<trameStandard.nParametres;x++){
         trameStandard.parametres[x]=bufferenvoie[2+x];
@@ -157,4 +167,4 @@ trame trameAxToTrameStandard(char bufferenvoie[]){
     trameStandard.controleErreur=bufferenvoie[trameStandard.nParametres+1];
     return (trameStandard);
 }
-
+//--------------------------------------------------------------------------

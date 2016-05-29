@@ -16,6 +16,7 @@ pc.baud(vitessePc);
 pc.attach(&fonctionserial);
 ax.attach(&fonctionSerialAx);
 selectionRxTx=0;
+trame trameSyncWrite;
 /*FILE* fichier = NULL;
 fichier = fopen("test.txt", "r+");*/
 /*char szNumbers[] = "B";

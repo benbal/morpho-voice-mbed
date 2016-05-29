@@ -9,7 +9,7 @@ void envoieTrameAx12(char bufferenvoie[100],DigitalOut selectionRxTx){
     for(int b=0;b<longeurTrame;b++){ 
         /*while(pc.writeable()==0){
         }*/   
-        ax.putc(bufferenvoie[b]);  
+        pc.putc(bufferenvoie[b]);  
     }
     wait(0.000030);
     selectionRxTx=0;
@@ -45,8 +45,6 @@ void fonctionserial (){
 void fonctionSerialAx (){
 //fonction callback enregitre tram ax 
     char octotrecu=ax.getc();
-    pc.putc(0x80);
-    pc.putc(octotrecu);
     if (octotrecu==0xFF){
         confirme2=true;
         lenghttrameax=2;

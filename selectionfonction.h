@@ -2,11 +2,14 @@
 void fonctionAx(char bufferenvoie[]){
     //selection fonction pc to ax
     //if (check(bufferreception)==bufferreception[15]){ 
+            led1 = 1;
+            wait(0.2);
+            led1 = 0;
         trame trameStandard;
         trameStandard=tramePcToTrameStandard(bufferenvoie);
+
         char adresseDebut;
         char trameEnvoie[50];
-        pc.putc(trameStandard.groupe);
         if(trameStandard.groupe=='0'){
             led1 = 1;
             wait(0.2);
@@ -34,7 +37,7 @@ void fonctionAx(char bufferenvoie[]){
                     break;
                 case '3':
                     //commande read
-                    trameStandard=commandeReadAx(trameStandard,0x10,0x01);
+                    trameStandard=commandeReadAx(trameStandard,0xE1,0x02);
                     creeTrameAx(trameStandard,trameEnvoie);
                     envoieTrameAx12(trameEnvoie, selectionRxTx);
                     break;
@@ -61,6 +64,18 @@ void fonctionAx(char bufferenvoie[]){
                     creeTrameAx(trameStandard,trameEnvoie);
                     envoieTrameAx12(trameEnvoie, selectionRxTx);
                     break;
+                case '7':
+                    //commande action
+                    trameStandard=commandeActionAx(trameStandard);
+                    creeTrameAx(trameStandard,trameEnvoie);
+                    envoieTrameAx12(trameEnvoie, selectionRxTx);
+                    break;
+                case '8':
+                    //commande action
+                    trameStandard=commandeActionAx(trameStandard);
+                    creeTrameAx(trameStandard,trameEnvoie);
+                    envoieTrameAx12(trameEnvoie, selectionRxTx);
+                    break;
             }
         }
         if(trameStandard.groupe=='2'){
@@ -70,6 +85,7 @@ void fonctionAx(char bufferenvoie[]){
             switch (trameStandard.instruction){
                 case '0':
                         //commande read
+                        pc.putc(0x42);
                         trameStandard=commandeReadAx(trameStandard,0x1E,0x02);
                         creeTrameAx(trameStandard,trameEnvoie);
                         envoieTrameAx12(trameEnvoie, selectionRxTx);
@@ -91,7 +107,6 @@ void fonctionPc(char test[]){
         trame trameStandard;
         trameStandard=trameAxToTrameStandard(test);
         char trameEnvoie[50];
-        char testswitch=0;
         if(trameStandard.parametres[0]==0x00){
             if (trameStandard.nParametres==1){
                 trameStandard=commandePingPc(trameStandard);
@@ -106,7 +121,7 @@ void fonctionPc(char test[]){
             }
         }
         else{
-            trameStandard=commandeError(trameStandard);
+            trameStandard=commandeErrorPc(trameStandard);
             creeTramePc(trameStandard,trameEnvoie);
             envoieTramePc(trameEnvoie);
             
