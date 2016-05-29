@@ -28,8 +28,8 @@ struct ax12A
      Adresse goalPosition;
      Adresse moving;  
 };
-typedef struct commandeAx12a commandeAx12a;
-struct commandeAx12a
+typedef struct indexCommandeAx12a commandeAx12a;
+struct indexCommandeAx12a
 {
      char ping;
      char readData;
@@ -39,9 +39,17 @@ struct commandeAx12a
      char reset;
      char syncWrite;
 };
-
+typedef struct trame trame;
+struct trame
+{   
+    char groupe;
+    char id;
+    char instruction;
+    char nParametres;
+    char parametres[10];
+    char controleErreur;
+};
 ax12A memoireAx06 ;
 commandeAx12a commandeAx06 ;
-
 bool b=false;
  

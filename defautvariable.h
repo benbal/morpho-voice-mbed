@@ -33,5 +33,27 @@
             #define ax_12A_05 0x05;
         //ax-12A: 3
             #define ax_12A_06 0x05;
-            
+//index des commande ax12A
+    //ping
+        #define indexCommandePing 0x01;
+    //ping
+        #define indexCommandeReadData 0x02;
+    //ping
+        #define indexCommandeWriteData 0x03;
+    //ping
+        #define indexCommandeRegWrite 0x04;
+    //ping
+        #define indexCommandeAction 0x05;
+    //ping
+        #define indexCommandeReset 0x06;
+    //ping
+        #define indexCommandeSyncWrite 0x83;
+//index des adresse ax12A
+    //position
+        #define indexAdresseGoalPosition 0x1E;
+    //vitesse
+        #define indexAdresseMovingSpeed 0x20;
+    
+    
+        
          

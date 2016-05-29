@@ -9,8 +9,9 @@ void envoieTrameAx12(char bufferenvoie[100],DigitalOut selectionRxTx){
     char longeurTrame = bufferenvoie[3]+4;
     for(int b=0;b<longeurTrame;b++){ 
         /*while(pc.writeable()==0){
-        }*/     
-        ax.putc(bufferenvoie[b]);
+        }*/   
+        ax.putc(bufferenvoie[b]);  
+        //ax.putc(bufferenvoie[b]);
     }
     wait(0.000030);
     selectionRxTx=0;
@@ -34,13 +35,13 @@ void fonctionserial (){
     char octotrecu=pc.getc();
     //pc.putc(octotrecu);
     if (octotrecu==0x24){
+        bufferreception[position]=octotrecu;
         confirme=true;
     }
     if (confirme==true){
         bufferreception[position]=octotrecu;
     }
     if (octotrecu==0x26 && confirme==true){
-        //pc.putc(bufferreception[1]);
         position=-1;
         confirme=false;
         fonctionAx(bufferreception);
@@ -53,75 +54,62 @@ void fonctionSerialAx (){
 //fonction callback enregitre tram ax 
    /* pc.putc(lenghttrameax);
     pc.putc(conp);*/
-    
+    pc.putc(0x80);
     char octotrecu=ax.getc();
     pc.putc(octotrecu);
     if (octotrecu==0xFF){
-        pc.putc(0x80);
-        //pc.putc(octotrecu);
         confirme2=true;
         lenghttrameax=2;
-        
     }
     else if  (confirme2==true && conp==1){
-        pc.putc(0x81);
         bufferenvoie3[conp]=octotrecu;
         lenghttrameax+=octotrecu;
         conp++;
     }
     else if (confirme2==true && conp<(lenghttrameax-1)){
-        pc.putc(0x82);
         bufferenvoie3[conp]=octotrecu;
         conp++;
     }
     else if(confirme2==true && conp==(lenghttrameax-1)){
-       pc.putc(0x83);
-       //pc.putc(octotrecu);
        bufferenvoie3[conp]=octotrecu;
-       
        confirme2=false;
        conp=0;
        fonctionPc(bufferenvoie3);
     }
     else{
-        pc.putc(0x84);
-        
         confirme2=false;
         conp=0;
     }
-    
 } 
-
 //--------------------------------------------------------------------------
-unsigned int charToInt( unsigned int decimalNumber1,unsigned int decimalNumber2,unsigned int decimalNumber3){
-//tranforme 3 char en unsigned int tel que ex: 150 => 0x313530 => 150
-    unsigned int decimalNumber4;
-    decimalNumber1= (decimalNumber1-0x30)*100;
-    decimalNumber2=(decimalNumber2-0x30)*10;
-    decimalNumber3=(decimalNumber3-0x30); 
-    //cut eventuel
-    decimalNumber4=floor((decimalNumber1+decimalNumber2+decimalNumber3)/0.29296875);
-    if(decimalNumber4==1024){
-        decimalNumber4--;   
+unsigned int charToInt(char donneesAConvertire[], char debutDonnees,char finDonnees){
+//tranforme 3 char en unsigned int tel que ex:0x303135303030 => 0150,00
+    unsigned int decimalNumber=0,decimalTotal=0,multiplicateur=1;
+    int y=0;
+    for (int x=finDonnees;x>=debutDonnees;x--){
+        decimalNumber=(donneesAConvertire[finDonnees-y]-0x30)*multiplicateur;
+        decimalTotal+=decimalNumber;
+        multiplicateur*=10;    
+        y++;
     }
-    
-    return (decimalNumber4);
+    return (decimalTotal);
 }
 //--------------------------------------------------------------------------
-char checkSum(char element1,char element2,char element3,char element4,char element5,char element6){
-//calcul le checksum  
-    char somme=~((element1+element2+element3+element4+element5+element6)%256);
-    return (somme);
+unsigned int degreToLong(unsigned int degrees){
+    unsigned int goalPosition;
+    goalPosition=floor((degrees)/0.29296875);
+    if(goalPosition==1024){
+        goalPosition--;   
+    }
+    return (goalPosition);
 }
 //--------------------------------------------------------------------------
-char checkSum2(char stopElement, char element[50]){
+char checkSum2(char debutElement,char finElement, char element[50]){
 //calcul le checksum  
- char somme=0;
-/* for(int b=0;b<9;b++){ 
-        pc.putc(element[b]);
-    }   
- pc.putc(stopElement);*/
-for (char i=0;i<stopElement;i++){
+ int somme=0;
+ pc.putc(0x43); 
+for (char i=debutElement;i<finElement;i++){
+    pc.putc(element[i]);
     somme+=element[i];
     somme%= 256;
     }
@@ -140,5 +128,4 @@ char check(char bufferreception [17]){
     char somme=(somme2%128);
     return (somme);
 }
-/* Contenu de votre fichier .h (autres include, prototypes, define...) */
 #endif 

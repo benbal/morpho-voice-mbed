@@ -11,8 +11,7 @@
 #include "commandeAx.h"
 #include "selectionfonction.h"
 int main() {
-memoireAx06.goalPosition.adresse=0x1e;
-     //pc.read(c,1,, &a, 77);
+//pc.read(c,1,, &a, 77);
 ax.baud(vitesseAx);
 pc.baud(vitessePc);
 pc.attach(&fonctionserial);
