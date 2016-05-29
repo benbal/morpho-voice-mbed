@@ -3,6 +3,7 @@ char bufferreception[20]=bufferReception;
 int position=0;
 bool confirme =false;
 char bufferenvoie[9]=bufferEnvoie;
+char bufferenvoie2[9]=bufferEnvoie2;
 int vitessepc=vitessePC;
 int vitesseax=vitesseAX;
 char id= ax_12A_06;
