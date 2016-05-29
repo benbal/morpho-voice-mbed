@@ -14,6 +14,7 @@ int main() {
 ax.baud(vitesseax);
 pc.baud(vitessepc);
 pc.attach(&fonctionserial);
+
 /*char szNumbers[] = "B";
   char * pEnd;
   long int li1, li2, li3, li4;
