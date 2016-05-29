@@ -1,15 +1,22 @@
 #include "mbed.h"
-DigitalOut Led1(p21),Led2(p22); // work ex1
-DigitalIn BP(p20);
+
+DigitalOut LedV(p21),LedR(p22);
+DigitalIn button(p5);
+int m = 0,h=1;
+bool l = true;
 int main () {
-    int h = 2;
     while(1) {
-      
-        Led1 = 1;
-        wait(0.05*h);
-        Led1=0;
-        Led2=1;
-        wait (0.2*h);
-        Led2=0;
-    }
-}
+        if (button==0){
+           h=2;
+        } 
+        else {
+           h=1; 
+        }
+        LedV = 1;
+        wait(0.125*h);
+        LedV=0;
+        LedR=1;
+        wait (0.125*h);
+        LedR=0;
+        }
+   }
