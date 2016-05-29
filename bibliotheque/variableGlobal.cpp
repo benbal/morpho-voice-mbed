@@ -1,4 +1,3 @@
-#include "defautvariable.h"
 #include "variableGlobal.h"
 //provisoire pour les pointeurs
 void variableGlobal(){
@@ -19,9 +18,6 @@ lenght=5;
 intruction=6;
 //Appel du tempsEcoule
 tempsEnSecondeAttenduEntreChaqueEchantillon=0.1;
-
-
 //format trame pour simplifier la programation 
-classAx12 trameSyncWrite;
 b=false;
 }

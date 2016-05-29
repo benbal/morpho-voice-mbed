@@ -1,6 +1,6 @@
 #ifndef DEF_REGLAGE
-#define DEF_REGLAGE
 #include "mbed.h"
+#define DEF_REGLAGE
 /*
             reglage par defaut
 */

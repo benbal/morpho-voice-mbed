@@ -1,7 +1,6 @@
 #ifndef DEF_VARIABLEGLOBAL
+#include "defautvariable.h"
 #define DEF_VARIABLEGLOBAL
-#include "classAx12.h"
-
 //provisoire pour les pointeurs
 //char bufferreception[20];
 unsigned char position;

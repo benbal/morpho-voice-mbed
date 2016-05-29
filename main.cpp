@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "fonction.h"
+
 /*#include "reglage.h"
 #include "classAx12.h"
 #include "capteurPression.h"

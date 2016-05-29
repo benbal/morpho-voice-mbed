@@ -1,8 +1,8 @@
 #ifndef DEF_FONCTION
-#define DEF_FONCTION
 #include "mbed.h"
-#include "capteurPression.h"
-        void fonctionFinDeCourse ();
+#include "Serial.h"
+#include "defautvariable.h"
+#define DEF_FONCTION
         unsigned int charToInt(char[],char,char);
         void intToChar(char[],unsigned int);
         unsigned int degreToLong(unsigned int);
