@@ -48,23 +48,12 @@
         #define indexCommandeReset 0x06;
     //SyncWrite
         #define indexCommandeSyncWrite 0x83;
-//index des commande pc
-    //ping
-        #define indexCommandePingPc 0x01;
-    //ReadData
-        #define indexCommandeReadDataPc 0x02;
-    //WriteData
-        #define indexCommandeWriteDataPc 0x03;
-    //RegWrite
-        #define indexCommandeRegWritePc 0x04;
-    //Action
-        #define indexCommandeActionPc 0x05;
-    //Reset
-        #define indexCommandeResetPc 0x06;
-    //SyncWrite
-        #define indexCommandeSyncWritePc 0x83;
 //index des adresse ax12A
     //position
         #define indexAdresseGoalPosition 0x1E;
     //vitesse
         #define indexAdresseMovingSpeed 0x20;
+    
+    
+        
+         

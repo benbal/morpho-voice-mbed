@@ -4,7 +4,6 @@
 //--------------------------------------------------------------------------
 //envoie une trame a AX-12A
 void envoieTrameAx12(char bufferenvoie[100],DigitalOut selectionRxTx){
-    pc.putc(0x99);
     selectionRxTx=1;
     wait(0.0000024);
     char longeurTrame = bufferenvoie[3]+4;
@@ -55,9 +54,7 @@ void fonctionSerialAx (){
 //fonction callback enregitre tram ax 
    /* pc.putc(lenghttrameax);
     pc.putc(conp);*/
-    pc.putc(0x80);
     char octotrecu=ax.getc();
-    pc.putc(octotrecu);
     if (octotrecu==0xFF){
         confirme2=true;
         lenghttrameax=2;
@@ -75,7 +72,6 @@ void fonctionSerialAx (){
        bufferenvoie3[conp]=octotrecu;
        confirme2=false;
        conp=0;
-       pc.putc(0x81);
        fonctionPc(bufferenvoie3);
     }
     else{
@@ -98,60 +94,28 @@ unsigned int charToInt(char donneesAConvertire[], char debutDonnees,char finDonn
 }
 //--------------------------------------------------------------------------
 unsigned int degreToLong(unsigned int degrees){
-    unsigned int longDegrees;
-    longDegrees=floor((degrees)/0.29296875);
-    if(longDegrees==1024){
-        longDegrees--;   
+    unsigned int goalPosition;
+    goalPosition=floor((degrees)/0.29296875);
+    if(goalPosition==1024){
+        goalPosition--;   
     }
-    return (longDegrees);
-}
-//--------------------------------------------------------------------------
-unsigned int longToDegre(unsigned int longDegrees){
-    unsigned int degrees;
-    degrees=floor((longDegrees)*0.29296875);
-    pc.putc(0x42);
-    pc.putc(degrees>>8);
-    pc.putc(degrees);
-    return (degrees);
-}
-//--------------------------------------------------------------------------
-unsigned int intToChar(char donneesAConvertire[],unsigned int degrees){
-//tranforme 3 char en unsigned int tel que ex:0x303135303030 => 0150,00
-pc.putc(0x78);
- float us1=0,us2=0,us3=0,us4=0;
- float ux1=0,ux2=0,ux3=0,ux4=0;
-    us1=degrees/1000;
-    ux1=us1*1000;
-    us2=floor((degrees-ux1)/100);
-    ux2=us2*100;
-    us3=floor((degrees-(ux1+ux2))/10);
-    ux3=us3*10;
-    us4=floor((degrees-(ux1+ux2+ux3)));
-    donneesAConvertire[0]=us1;
-    donneesAConvertire[1]=us2;
-    donneesAConvertire[2]=us3;
-    donneesAConvertire[3]=us4;
-    donneesAConvertire[4]=0;
-    donneesAConvertire[5]=0;
-    //return (decimalTotal);
+    return (goalPosition);
 }
 //--------------------------------------------------------------------------
 char checkSum2(char debutElement,char finElement, char element[50]){
 //calcul le checksum  
- int somme=0;
+ int somme=0; 
 for (char i=debutElement;i<finElement;i++){
     pc.putc(element[i]);
     somme+=element[i];
     somme%= 256;
     }
     somme=~somme;
-    pc.putc(somme);
     return (somme);
 }
 //--------------------------------------------------------------------------
 char check(char bufferreception [17]){
 //calcul le checksum
-
     int somme2=0;
     for(int b=0;b<=14;b++){ 
         somme2+=bufferreception[b];
