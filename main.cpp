@@ -18,6 +18,8 @@ int main() {
     pc.attach(&fonctionserial);
     ax.attach(&fonctionSerialAx);
     selectionRxTx=0;
+    finDeCourse.rise(&fonctionFinDeCourse);
+    finDeCourse2.rise(&fonctionFinDeCourse);
 /*CODE RESERVE
 FILE* fichier = NULL;
 fichier = fopen("test.txt", "r+");

@@ -10,7 +10,12 @@
         Serial mp(p28,p27 );
         //mode serial simplifie switches 2 et 4 a off les autre sur on
 //Sortie Digital
+    
         DigitalOut selectionRxTx (p21);
-//Voyant
+        DigitalOut selectionSyRen (p22);
+        //Voyant
         DigitalOut led1(LED1);
-        DigitalOut led2(LED2);    
+        DigitalOut led2(LED2); 
+//Entre Digital
+    InterruptIn finDeCourse(p29);
+    InterruptIn finDeCourse2(p30);

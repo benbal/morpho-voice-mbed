@@ -22,6 +22,18 @@ void envoieTramePc(char bufferenvoie[17]){
     }
 }
 //--------------------------------------------------------------------------
+void envoieMoteur(char mouvement){
+//controle moteur
+    selectionRxTx=1;
+    selectionSyRen=1;
+    wait(0.001);
+    ax.putc(mouvement);
+    pc.putc(mouvement);
+    wait(0.002);
+    selectionSyRen=0;
+    selectionRxTx=0;
+}
+//--------------------------------------------------------------------------
 void fonctionserial (){
 //fonction callback enregitre tram pc   
     char octotrecu=pc.getc();
@@ -66,7 +78,12 @@ void fonctionSerialAx (){
         confirme2=false;
         conp=0;
     }
-} 
+}
+ //--------------------------------------------------------------------------
+void fonctionFinDeCourse (){
+//fonction callback fin de course 
+     envoieMoteur(0x7f);//stop = 0x7f= 127
+}
 //--------------------------------------------------------------------------
 unsigned int charToInt(char donneesAConvertire[], char debutDonnees,char finDonnees){
 //tranforme 3 char en unsigned int tel que ex:0x30,0x31,0x35,0x30,0x30,0x30=> 0150,00
@@ -105,7 +122,7 @@ unsigned int degreToLong(unsigned int degrees){
 //transforme un entier en degre 0->300° en long de 0->1024
     unsigned int longDegrees;
     longDegrees=floor((degrees)/0.29296875);
-    if(longDegrees<=1024){
+    if(longDegrees>=1024){
         longDegrees=1023;   
     }
     return (longDegrees);
@@ -122,7 +139,7 @@ unsigned char intToShort(unsigned int mouvement){
 //transforme un entier en degre 0->100 en short de 0->127
     unsigned char longDegrees;
     longDegrees=floor((mouvement)*1.27);
-    if(longDegrees<=128){
+    if(longDegrees>=128){
         longDegrees=127;   
     }
     return (longDegrees);

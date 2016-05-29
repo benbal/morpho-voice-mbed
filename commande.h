@@ -40,6 +40,9 @@ trame commandeWriteAx(trame trameStandard,char adresseDebut){
     trameStandard.parametres[1]=decimalNumber;
     trameStandard.parametres[2]=decimalNumber>>8;
     trameStandard.nParametres=3;
+    
+    pc.putc(trameStandard.parametres[1]);
+    pc.putc(trameStandard.parametres[2]);
     return (trameStandard);
 }
 //--------------------------------------------------------------------------
@@ -129,6 +132,7 @@ unsigned char commandeMouvementMoteur(trame trameStandard){
 //--------------------------------------------------------------------------
 void creeTrameAx(trame trameEnvoieAx,char trameEnvoie[]){
     //cree la trame Ax
+    pc.putc(trameEnvoieAx.parametres[2]);
     trameEnvoie[0]=0xFF;
     trameEnvoie[1]=0xFF;
     trameEnvoie[2]=trameEnvoieAx.id;
@@ -136,7 +140,8 @@ void creeTrameAx(trame trameEnvoieAx,char trameEnvoie[]){
     trameEnvoie[4]=trameEnvoieAx.instruction;
     if(trameEnvoieAx.nParametres>0){
         for(char x=0;x<trameEnvoieAx.nParametres;x++){
-            trameEnvoie[5+x]=trameEnvoieAx.parametres[x];    
+            trameEnvoie[5+x]=trameEnvoieAx.parametres[x];
+            pc.putc(trameEnvoie[5+x]);    
         }
     }
     trameEnvoie[trameEnvoieAx.nParametres+5]=checkSum2(2,trameEnvoieAx.nParametres+5,trameEnvoie); 

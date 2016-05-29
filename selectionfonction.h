@@ -4,7 +4,7 @@ void fonctionAx(char bufferenvoie[]){
 //selection fonction pc to ax
     //if (check(bufferreception)==bufferreception[15]){ 
     //verification checksun
-        led1 = !led1;
+        //led1 = !led1;
         trame trameStandard;
         trameStandard=tramePcToTrameStandard(bufferenvoie);
         char adresseDebut;
@@ -66,21 +66,25 @@ void fonctionAx(char bufferenvoie[]){
             }
         }
         //
-        if(trameStandard.groupe=='1'){
+        else if(trameStandard.groupe=='1'){
         //commande pour pour le moteur poumon
             switch (trameStandard.instruction){
             //commande vitesse et direction
-                    case '0':
-                    //commande marche avant     
-                            mp.putc(127+commandeMouvementMoteur(trameStandard));
-                            break;
-                    case '1':
-                    //commande marche arriere
-                            mp.putc(127-commandeMouvementMoteur(trameStandard));
-                            break;
+                unsigned char mouvement;
+                case '0':
+                //commande marche avant
+                    mouvement = 127+commandeMouvementMoteur(trameStandard);   
+                    envoieMoteur(mouvement);
+                    
+                    break;
+                case '1':
+                //commande marche arriere
+                    mouvement = 127-commandeMouvementMoteur(trameStandard);   
+                    envoieMoteur(mouvement);
+                    break;
             }
         }
-        if(trameStandard.groupe=='2'){
+        else if(trameStandard.groupe=='2'){
         //commande pour ensemble des capteur ax-12 compris
             switch (trameStandard.instruction){
                 case '0':
@@ -100,6 +104,9 @@ void fonctionAx(char bufferenvoie[]){
                         //code a implementer
                        break;
             }
+        }
+        else{
+        //erreur a faire
         }        
     //}
 }
