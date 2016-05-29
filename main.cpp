@@ -17,19 +17,25 @@ selectionRxTx=0;
     //reglage vitesse serial
         ax.baud(vitesseAx);
         pc.baud(vitessePc);
-        mp.baud(vitessePc);
+        mp.baud(vitesseMp);
     //reglage fonction de call back
         //communication
         pc.attach(&fonctionserial);
         ax.attach(&fonctionSerialAx);
         //fin de capteur course
-        finDeCourse.rise(&fonctionFinDeCourse);
-        finDeCourse2.rise(&fonctionFinDeCourse);
+        finDeCourse.rise(&commandeFinDeCourse);
+        finDeCourse2.rise(&commandeFinDeCourse);
         //Appel du tempsEcoule
-        //float tempsEnSecondeAttenduEntreChaqueEchantillon = 0.1;
+        //tempsEnSecondeAttenduEntreChaqueEchantillon = 0.1;
         tempsEcoule.attach(&tempsMort,tempsEnSecondeAttenduEntreChaqueEchantillon);
+        //temps 1 seconde
+        unsigned char starMoteur[7]={0x31,0x2C,0x73,0x74,0x61,0x72,0x73};// 1,start
+        envoieMoteur(starMoteur,7);
+        moteurCommandeTime.attach(&moteurCommande,1);
+        
     //Appel de la fonction qui initialise les 10 premières valeurs du Capteur
         les10PremieresValeurs();
+        
     
 /*CODE RESERVE
 FILE* fichier = NULL;

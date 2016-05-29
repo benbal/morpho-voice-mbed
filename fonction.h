@@ -1,3 +1,5 @@
+//communication
+//envoie
 //--------------------------------------------------------------------------
 void envoieTrameAx12(char bufferenvoie[100],DigitalOut selectionRxTx){
 //envoie une trame a AX-12A
@@ -22,18 +24,13 @@ void envoieTramePc(char bufferenvoie[17]){
     }
 }
 //--------------------------------------------------------------------------
-void envoieMoteur(char mouvement){
+void envoieMoteur(unsigned char mouvement[],unsigned char nMax){
 //controle moteur
-    selectionRxTx=1;
-    selectionSyRen=1;
-    wait(0.001);
-    mp.putc(mouvement);
-    ax.putc(mouvement);
-    pc.putc(mouvement);
-    wait(0.002);
-    selectionSyRen=0;
-    selectionRxTx=0;
+    for(int b=0;b<(nMax-1);b++){ 
+        mp.putc(mouvement[b]);
+    }
 }
+//reception
 //--------------------------------------------------------------------------
 void fonctionserial (){
 //fonction callback enregitre tram pc   
@@ -80,11 +77,8 @@ void fonctionSerialAx (){
         conp=0;
     }
 }
- //--------------------------------------------------------------------------
-void fonctionFinDeCourse (){
-//fonction callback fin de course 
-     envoieMoteur(0x7f);//stop = 0x7f= 127
-}
+
+//fonction 
 //--------------------------------------------------------------------------
 unsigned int charToInt(char donneesAConvertire[], char debutDonnees,char finDonnees){
 //tranforme 3 char en unsigned int tel que ex:0x30,0x31,0x35,0x30,0x30,0x30=> 0150,00

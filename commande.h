@@ -1,3 +1,41 @@
+//moteur 
+//--------------------------------------------------------------------------
+void commandeMouvementMoteur(trame trameStandard){
+//config commande mouvement pour le moteur
+    //mouvementMoteur=intToShort(charToInt(trameStandard.parametres,0,3));
+    unsigned char n=0;
+    nMax=6;
+    if(trameStandard.parametres[0]==0x31){
+        n=1;
+        //2D = "-"
+        possitionMoteur[4]=0x2D;
+        vitesseMoteur[3]=0x2D;
+        nMax=7;
+    }
+    for(unsigned char tour=n; tour<8;tour++){
+        possitionMoteur[tour+4]=trameStandard.parametres[tour];
+        vitesseMoteur[tour+3]=trameStandard.parametres[tour];
+    }
+    envoieMoteur(possitionMoteur,(nMax));
+    envoieMoteur(vitesseMoteur,(nMax+1));
+}
+ //--------------------------------------------------------------------------
+void commandeFinDeCourse (){
+//fonction callback fin de course 
+     trame trameStandard;
+     for(char i=0; i<4;i++){
+         trameStandard.parametres[i]=0x30;
+    }
+     commandeMouvementMoteur(trameStandard);
+}
+ //--------------------------------------------------------------------------
+void moteurCommande (){
+//fonction 
+    envoieMoteur(possitionMoteur,(nMax));
+    envoieMoteur(vitesseMoteur,(nMax+1));
+}
+
+//capteur de pression
 //--------------------------------------------------------------------------
 float lectureEtMesure(AnalogIn SignalDePressionAmplifie){
     //prise de mesure 
@@ -31,6 +69,7 @@ void tempsMort(AnalogIn SignalDePressionAmplifie=SignalDePressionAmplifie){
        somme=0;
        poiteurpression++;
 }
+//ax12
 //--------------------------------------------------------------------------
 trame commandePingAx(trame trameStandard){
     //config commande ping pour Ax
@@ -173,13 +212,7 @@ trame commandeReadPc(trame trameStandard){
     return (trameStandard);
 }
 
-//--------------------------------------------------------------------------
-unsigned char commandeMouvementMoteur(trame trameStandard){
-//config commande mouvement pour le moteur
-    unsigned char mouvementMoteur;
-    mouvementMoteur=intToShort(charToInt(trameStandard.parametres,0,3));
-    return (mouvementMoteur);
-}
+
 //--------------------------------------------------------------------------
 void creeTrameAx(trame trameEnvoieAx,char trameEnvoie[]){
     //cree la trame Ax

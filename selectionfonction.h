@@ -70,16 +70,11 @@ void fonctionAx(char bufferenvoie[]){
         //commande pour pour le moteur poumon
             switch (trameStandard.instruction){
             //commande vitesse et direction
-                unsigned char mouvement;
                 case '0':
                 //commande marche avant
-                    mouvement = 127+commandeMouvementMoteur(trameStandard);   
-                    envoieMoteur(mouvement);
-                    break;
-                case '1':
-                //commande marche arriere
-                    mouvement = 127-commandeMouvementMoteur(trameStandard);   
-                    envoieMoteur(mouvement);
+                    //mouvement = 127+commandeMouvementMoteur(trameStandard);   
+                    //envoieMoteur(mouvement);
+                    commandeMouvementMoteur( trameStandard);
                     break;
             }
         }
