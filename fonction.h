@@ -72,9 +72,12 @@ unsigned int charToInt( unsigned int decimalNumber1,unsigned int decimalNumber2,
     return (decimalNumber4);
 }
 //--------------------------------------------------------------------------
-char checkSum(char element1,char element2,char element3,char element4,char element5,char element6){
-//calcul le checksum      
-    char somme=~((element1+element2+element3+element4+element5+element6)%256);
+
+char checkSum(char element1,char element2,char element3,char element4,char element5,char element6){     
+
+//calcul le checksum  
+  
+    char somme=~(element1+element2+element3+element4+element5+element6)%256)
     return (somme);
 }
 //--------------------------------------------------------------------------

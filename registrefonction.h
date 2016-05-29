@@ -7,3 +7,4 @@ void fonctionserial ();
 unsigned int charToInt( unsigned int ,unsigned int ,unsigned int );
 char checkSum(char,char,char,char,char,char);
 char check();
+char somme();
