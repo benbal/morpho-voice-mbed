@@ -1,20 +1,18 @@
-#ifndef DEF_REGLAGE
-#include "mbed.h"
-#define DEF_REGLAGE
 /*
             reglage par defaut
 */
 //serial
     //serial canal 0:pc
+        //Serial pc(p28,p27);
         Serial pc(USBTX,USBRX);
     //serial canal 1:ax-12A
         Serial ax(p9,p10 );
     //serial canal 2:moteur poumon
-        Serial mp(p28,p27 );
+        Serial mp(p13,p14 );
     //mode serial simplifie switches 2 et 4 a off les autre sur on
 //Sortie Digital
     //selection sortie
-        DigitalOut selectionRxTx (p21);
+        DigitalOut selectionRxTx (p8);
         DigitalOut selectionSyRen (p22);
     //Voyant
         DigitalOut led1(LED1);
@@ -29,4 +27,3 @@
 //time
     //temps entre deux mesure de pression
         Ticker  tempsEcoule;
-#endif

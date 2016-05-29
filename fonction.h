@@ -1,5 +1,90 @@
-#include "fonction.h"
-
+//--------------------------------------------------------------------------
+void envoieTrameAx12(char bufferenvoie[100],DigitalOut selectionRxTx){
+//envoie une trame a AX-12A
+    selectionRxTx=1;
+    wait(0.000024);
+    char longeurTrame = bufferenvoie[3]+4;
+    for(int b=0;b<longeurTrame;b++){ 
+        /*while(pc.writeable()==0){
+        }*/   
+        ax.putc(bufferenvoie[b]);  
+    }
+    wait(0.00030);
+    selectionRxTx=0;
+}
+//--------------------------------------------------------------------------
+void envoieTramePc(char bufferenvoie[17]){
+    //envoie une trame a Pc
+    for(int b=0;b<17/*sizeof(bufferenvoie)*/;b++){ 
+        /*while(pc.writeable()==0){
+        }*/   
+        pc.putc(bufferenvoie[b]);
+    }
+}
+//--------------------------------------------------------------------------
+void envoieMoteur(char mouvement){
+//controle moteur
+    selectionRxTx=1;
+    selectionSyRen=1;
+    wait(0.001);
+    mp.putc(mouvement);
+    ax.putc(mouvement);
+    pc.putc(mouvement);
+    wait(0.002);
+    selectionSyRen=0;
+    selectionRxTx=0;
+}
+//--------------------------------------------------------------------------
+void fonctionserial (){
+//fonction callback enregitre tram pc   
+    char octotrecu=pc.getc();
+    if (octotrecu==0x24){
+        bufferreception[position]=octotrecu;
+        confirme=true;
+    }
+    if (confirme==true){
+        bufferreception[position]=octotrecu;
+    }
+    if (octotrecu==0x26 && confirme==true){
+        position=-1;
+        confirme=false;
+        fonctionAx(bufferreception);
+    }
+    position++;
+}
+//--------------------------------------------------------------------------
+void fonctionSerialAx (){
+//fonction callback enregitre tram ax 
+    char octotrecu=ax.getc();
+    if (octotrecu==0xFF){
+        confirme2=true;
+        lenghttrameax=2;
+    }
+    else if  (confirme2==true && conp==1){
+        bufferenvoie3[conp]=octotrecu;
+        lenghttrameax+=octotrecu;
+        conp++;
+    }
+    else if (confirme2==true && conp<(lenghttrameax-1)){
+        bufferenvoie3[conp]=octotrecu;
+        conp++;
+    }
+    else if(confirme2==true && conp==(lenghttrameax-1)){
+       bufferenvoie3[conp]=octotrecu;
+       confirme2=false;
+       conp=0;
+       fonctionPc(bufferenvoie3);
+    }
+    else{
+        confirme2=false;
+        conp=0;
+    }
+}
+ //--------------------------------------------------------------------------
+void fonctionFinDeCourse (){
+//fonction callback fin de course 
+     envoieMoteur(0x7f);//stop = 0x7f= 127
+}
 //--------------------------------------------------------------------------
 unsigned int charToInt(char donneesAConvertire[], char debutDonnees,char finDonnees){
 //tranforme 3 char en unsigned int tel que ex:0x30,0x31,0x35,0x30,0x30,0x30=> 0150,00
@@ -15,7 +100,7 @@ unsigned int charToInt(char donneesAConvertire[], char debutDonnees,char finDonn
 }
 //--------------------------------------------------------------------------
 void intToChar(char donneesAConvertire[],unsigned int degrees){
-//tranforme unsigned int en 3 char tel que ex:0150,00 => 0x00 0x01 0x05 0x00 0x00 0x0
+//tranforme unsigned int en 3 char tel que ex:0150,00 => 0x00 0x01 0x05 0x00 0x00 0x00
 //a mettre au propre
     float us1=0,us2=0,us3=0,us4=0;
     float ux1=0,ux2=0,ux3=0;
@@ -81,3 +166,4 @@ char check(char bufferreception [17]){
     char somme=(somme2%128);
     return (somme);
 }
+//--------------------------------------------------------------------------

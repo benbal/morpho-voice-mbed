@@ -11,3 +11,4 @@ unsigned int degreToLong(unsigned int degrees);
 void tempsMort();
 void les10PremieresValeurs();
 float lectureEtMesure();
+void intToChar(char [],unsigned int );
