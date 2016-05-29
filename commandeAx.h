@@ -6,12 +6,13 @@ trame commandePingAx(trame trameStandard){
     return (trameStandard);
 }
 //--------------------------------------------------------------------------
-void commandeReadAx(trame trameStandard,char adresseDebut,char adresseLongeur){
+trame commandeReadAx(trame trameStandard,char adresseDebut,char adresseLongeur){
     //config commande read pour Ax
     trameStandard.instruction=indexCommandeReadData;
     trameStandard.parametres[0]=adresseDebut;
     trameStandard.parametres[1]=adresseLongeur;
     trameStandard.nParametres=2;
+    return (trameStandard);
 }
 //--------------------------------------------------------------------------
 trame commandeRegWriteAx(trame trameStandard,char adresseDebut){
@@ -48,32 +49,65 @@ trame commandeActionAx(trame trameStandard){
     return (trameStandard);
 }
 //--------------------------------------------------------------------------
-void creeTrame(trame trameEnvoieAx,char trameEnvoie[]){
+trame commandePingPc(trame trameStandard){
+    //config commande ping pour Ax
+    trameStandard.groupe=indexCommandePingPc;
+    trameStandard.instruction=0x00;
+    return (trameStandard);
+}
+//--------------------------------------------------------------------------
+trame commandeReadPc(trame trameStandard){
+    //config commande read pour Ax
+    char donneesAConvertire[6];
+    trameStandard.nParametres=6;
+    intToChar( donneesAConvertire,longToDegre(0x3FF));
+    for(char x=0;x<trameStandard.nParametres;x++){
+        trameStandard.parametres[x]=donneesAConvertire[x];
+    }
+    
+    trameStandard.instruction=indexCommandeReadData;
+    return (trameStandard);
+}
+//--------------------------------------------------------------------------
+void creeTrameAx(trame trameEnvoieAx,char trameEnvoie[]){
     //cree la trame Ax
-    pc.putc(0x44);
+    pc.putc(0x12);
     trameEnvoie[0]=0xFF;
     trameEnvoie[1]=0xFF;
     trameEnvoie[2]=trameEnvoieAx.id;
-    pc.putc(trameEnvoieAx.nParametres+2);
     trameEnvoie[3]=trameEnvoieAx.nParametres+2;
     trameEnvoie[4]=trameEnvoieAx.instruction;
     if(trameEnvoieAx.nParametres>0){
-        pc.putc(0x42);
-        
-        
         for(char x=0;x<trameEnvoieAx.nParametres;x++){
             trameEnvoie[5+x]=trameEnvoieAx.parametres[x];
+            
         }
     }
-    for(char x=0;x<15;x++){
-        pc.putc(trameEnvoie[x]);
-    }
-    pc.putc(0x44);
-    trameEnvoie[trameEnvoieAx.nParametres+5]=checkSum2(2,trameEnvoieAx.nParametres+5,trameEnvoie);
-    
+    trameEnvoie[trameEnvoieAx.nParametres+5]=checkSum2(2,trameEnvoieAx.nParametres+5,trameEnvoie); 
 }
 //--------------------------------------------------------------------------
-trame tramePcToTrameStandard(char bufferenvoie[]){
+void creeTramePc(trame trameEnvoiePc,char trameEnvoie[]){
+    //cree la trame Pc
+    trameEnvoie[0]=0x24;
+    trameEnvoie[1]=trameEnvoiePc.groupe;
+    trameEnvoie[2]=0x3A;
+    trameEnvoie[3]=trameEnvoiePc.id;
+    trameEnvoie[4]=0x3A;
+    trameEnvoie[5]=trameEnvoiePc.instruction;
+    trameEnvoie[6]=0x3A;
+    for(char x=0;x<trameEnvoiePc.nParametres-2;x++){
+            trameEnvoie[7+x]=trameEnvoiePc.parametres[x];
+    }
+    trameEnvoie[11]=0x2E;
+    trameEnvoie[12]=trameEnvoiePc.parametres[trameEnvoiePc.nParametres-2];
+    trameEnvoie[13]=trameEnvoiePc.parametres[trameEnvoiePc.nParametres-1];
+    trameEnvoie[14]=0x3A;
+    trameEnvoie[15]=check(trameEnvoie);
+    trameEnvoie[16]=0x26;   
+}
+//--------------------------------------------------------------------------
+trame tramePcToTrameStandard(char bufferreception[]){
+    pc.putc(0x11);
     trame trameStandard;
     trameStandard.groupe=bufferreception[1];
     trameStandard.id=bufferreception[3];
@@ -91,12 +125,12 @@ trame tramePcToTrameStandard(char bufferenvoie[]){
 trame trameAxToTrameStandard(char bufferenvoie[]){
     trame trameStandard;
     trameStandard.groupe=0;
-    trameStandard.id=bufferreception[0];
-    trameStandard.nParametres=bufferreception[1]-1;
+    trameStandard.id=bufferenvoie[0];
+    trameStandard.nParametres=bufferenvoie[1]-1;
     for(char x=0;x<trameStandard.nParametres;x++){
         trameStandard.parametres[x]=bufferenvoie[2+x];
     }
-    trameStandard.controleErreur=bufferreception[trameStandard.nParametres+1];
+    trameStandard.controleErreur=bufferenvoie[trameStandard.nParametres+1];
     return (trameStandard);
 }
 
