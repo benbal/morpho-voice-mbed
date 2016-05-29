@@ -6,7 +6,11 @@ void fonctionAx(char bufferenvoie[]){
         trameStandard=tramePcToTrameStandard(bufferenvoie);
         char adresseDebut;
         char trameEnvoie[50];
+        pc.putc(trameStandard.groupe);
         if(trameStandard.groupe=='0'){
+            led1 = 1;
+            wait(0.2);
+            led1 = 0;
             switch (trameStandard.instruction){
                 case '0':
                     //commande position
@@ -52,7 +56,7 @@ void fonctionAx(char bufferenvoie[]){
                     adresseDebut=0x10;
                     trameStandard.instruction=indexCommandeWriteData;
                     trameStandard.parametres[0]=adresseDebut;
-                    trameStandard.parametres[1]=0x01;
+                    trameStandard.parametres[1]=0x02;
                     trameStandard.nParametres=2;
                     creeTrameAx(trameStandard,trameEnvoie);
                     envoieTrameAx12(trameEnvoie, selectionRxTx);
@@ -60,6 +64,9 @@ void fonctionAx(char bufferenvoie[]){
             }
         }
         if(trameStandard.groupe=='2'){
+            led1 = 1;
+            wait(0.2);
+            led1 = 0;
             switch (trameStandard.instruction){
                 case '0':
                         //commande read
@@ -85,17 +92,24 @@ void fonctionPc(char test[]){
         trameStandard=trameAxToTrameStandard(test);
         char trameEnvoie[50];
         char testswitch=0;
-        if (trameStandard.nParametres==1){
-            trameStandard.nParametres=4;
-            trameStandard=commandePingPc(trameStandard);
-            creeTramePc(trameStandard,bufferenvoiePc);
-            envoieTramePc(bufferenvoiePc);
+        if(trameStandard.parametres[0]==0x00){
+            if (trameStandard.nParametres==1){
+                trameStandard=commandePingPc(trameStandard);
+                creeTramePc(trameStandard,trameEnvoie);
+                envoieTramePc(trameEnvoie);
+            }
+            else{
+                trameStandard=commandeReadPc(trameStandard);
+                creeTramePc(trameStandard,trameEnvoie);
+                envoieTramePc(trameEnvoie);
+            
+            }
         }
         else{
-            trameStandard=commandeReadPc(trameStandard);
-            creeTramePc(trameStandard,bufferenvoiePc);
-            envoieTramePc(bufferenvoiePc);
-        
+            trameStandard=commandeError(trameStandard);
+            creeTramePc(trameStandard,trameEnvoie);
+            envoieTramePc(trameEnvoie);
+            
         }   
     }
 }

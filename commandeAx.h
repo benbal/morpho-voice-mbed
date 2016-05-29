@@ -53,7 +53,29 @@ trame commandeActionAx(trame trameStandard){
 //--------------------------------------------------------------------------
 trame commandePingPc(trame trameStandard){
     //config commande ping pour Ax
+    trameStandard.nParametres=6;
     trameStandard.groupe=indexCommandePingPc;
+    trameStandard.instruction=0x00;
+    return (trameStandard);
+}
+//--------------------------------------------------------------------------
+trame commandeError(trame trameStandard){
+    //config commande ping pour Ax
+    trameStandard.nParametres=6;
+    trameStandard.groupe=indexCommandePingPc;
+    pc.putc(0x42);
+    if(trameStandard.parametres[0]<0x09){
+        trameStandard.parametres[4]=0x09;
+        trameStandard.parametres[5]=trameStandard.parametres[0];
+    }
+    else{
+        trameStandard.parametres[4]=trameStandard.parametres[0]>>4;
+        trameStandard.parametres[5]=0x09;
+    }
+    trameStandard.parametres[0]=0x09;
+    trameStandard.parametres[1]=0x09;
+    trameStandard.parametres[2]=0x09;
+    trameStandard.parametres[3]=0x09;
     trameStandard.instruction=0x00;
     return (trameStandard);
 }

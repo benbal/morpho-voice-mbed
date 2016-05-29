@@ -14,7 +14,6 @@ void envoieTrameAx12(char bufferenvoie[100],DigitalOut selectionRxTx){
     wait(0.000030);
     selectionRxTx=0;
 }
-
 //--------------------------------------------------------------------------
 void envoieTramePc(char bufferenvoie[17]){
     //envoie une trame a Pc
@@ -23,7 +22,6 @@ void envoieTramePc(char bufferenvoie[17]){
         }*/     
         pc.putc(bufferenvoie[b]);
     }
-    
 }
 //--------------------------------------------------------------------------
 void fonctionserial (){
@@ -42,13 +40,12 @@ void fonctionserial (){
         fonctionAx(bufferreception);
     }
     position++;
-} 
-
+}
 //--------------------------------------------------------------------------
 void fonctionSerialAx (){
 //fonction callback enregitre tram ax 
-    pc.putc(0x80);
     char octotrecu=ax.getc();
+    pc.putc(0x80);
     pc.putc(octotrecu);
     if (octotrecu==0xFF){
         confirme2=true;
@@ -67,7 +64,6 @@ void fonctionSerialAx (){
        bufferenvoie3[conp]=octotrecu;
        confirme2=false;
        conp=0;
-       pc.putc(0x81);
        fonctionPc(bufferenvoie3);
     }
     else{
