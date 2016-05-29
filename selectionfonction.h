@@ -34,13 +34,10 @@ pc.putc(check());
                    
         switch (test[5]){
             case '0':
-                pc.putc(0x00);
                 envoieTrame();
-                
                 //code
                 break;
             case '1':
-                pc.putc(0x01);
                 //code
                 envoieTrame2();
                 break;

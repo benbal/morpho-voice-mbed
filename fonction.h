@@ -2,7 +2,6 @@
 //envoie une trame a AX-12A
 void envoieTrame(){
     selectionRxTx=1;
-    wait(0.000001);
     unsigned int decimalNumber;
     bufferenvoie[5]=0x1E;
     bufferenvoie[2]=bufferreception[3];
@@ -23,7 +22,6 @@ void envoieTrame(){
 //envoie une trame a AX-12A
 void envoieTrame2(){
     selectionRxTx=1;
-    wait(0.000001);
     unsigned int decimalNumber;
     bufferenvoie[5]=0x20;
     bufferenvoie[2]=bufferreception[3];
@@ -44,7 +42,6 @@ void envoieTrame2(){
 //--------------------------------------------------------------------------
 //envoie une trame a AX-12A
 void envoieTrame3(){
-    pc.putc(0x99);
     selectionRxTx=1;
     wait(0.000001);
     unsigned int decimalNumber;
@@ -90,13 +87,17 @@ void fonctionserial (){
 //--------------------------------------------------------------------------
 void fonctionserialax (){
 //fonction callback enregitre tram   
-
-    char octotrecu=pc.getc();
-    if (octotrecu==0xFF){
-        pc.putc(0x42);
-        
-    }
+  
+    char octotrecu=ax.getc();
     
+   pc.printf("%X \n\r",octotrecu);
+   if (c==false){
+    if (octotrecu==0xFF){
+          if (octotrecu==0xFF){
+              
+              }     
+    }
+    }
 } 
 
 //--------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 #include "mbed.h"
-#include "Serial.h"
+//#include "Serial.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -13,8 +13,8 @@ int main() {
      //pc.read(c,1,, &a, 77);
 ax.baud(vitesseax);
 pc.baud(vitessepc);
-pc.attach(&fonctionserial);
-//ax.attach(&fonctionserialax);
+pc.attach(&fonctionserial, Serial::RxIrq);
+ax.attach(&fonctionserialax);
 selectionRxTx=1;
 /*char szNumbers[] = "B";
   char * pEnd;
