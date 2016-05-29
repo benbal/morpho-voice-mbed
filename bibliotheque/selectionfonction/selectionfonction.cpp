@@ -1,12 +1,13 @@
-
+#include "selectionfonction.h"
 //--------------------------------------------------------------------------
-void fonctionAx(char bufferenvoie[]){
+void fonctionAx(char bufferenvoie[],classAx12 trameSyncWrite){
 //selection fonction pc to ax
     //if (check(bufferreception)==bufferreception[15]){ 
     //verification checksun
-        //led1 = !led1;
-        trame trameStandard;
-        trameStandard=tramePcToTrameStandard(bufferenvoie);
+        led1 = !led1;
+        //mise en mise en forme de la trame pc
+        classAx12 trameStandard;
+        trameStandard.tramePcToTrameStandard(bufferenvoie);
         char adresseDebut;
         char trameEnvoie[50];
         if(trameStandard.groupe=='0'){
@@ -15,35 +16,35 @@ void fonctionAx(char bufferenvoie[]){
                 case '0':
                     //commande position
                     adresseDebut=indexAdresseGoalPosition;
-                    trameStandard=commandeWriteAx(trameStandard,adresseDebut);
-                    creeTrameAx(trameStandard,trameEnvoie);
-                    envoieTrameAx12(trameEnvoie, selectionRxTx);
+                    trameStandard.commandeWriteAx(adresseDebut);
+                    trameStandard.creeTrameAx(trameEnvoie);
+                    envoieTrameAx12(trameEnvoie);
                     break;
                 case '1':
                     //commande vitesse
                     adresseDebut=indexAdresseMovingSpeed;
-                    trameStandard=commandeWriteAx(trameStandard,adresseDebut);
-                    creeTrameAx(trameStandard,trameEnvoie);
-                    envoieTrameAx12(trameEnvoie, selectionRxTx);
+                    trameStandard.commandeWriteAx(adresseDebut);
+                    trameStandard.creeTrameAx(trameEnvoie);
+                    envoieTrameAx12(trameEnvoie);
                     break;
                 case '2':
                     //commande ping
-                    trameStandard=commandePingAx(trameStandard);
-                    creeTrameAx(trameStandard,trameEnvoie);
-                    envoieTrameAx12(trameEnvoie, selectionRxTx);
+                    trameStandard.commandePingAx();
+                    trameStandard.creeTrameAx(trameEnvoie);
+                    envoieTrameAx12(trameEnvoie);
                     break;
                 case '3':
                     //commande reg write position
                     adresseDebut=indexAdresseGoalPosition;
-                    trameStandard=commandeRegWriteAx(trameStandard,adresseDebut);
-                    creeTrameAx(trameStandard,trameEnvoie);
-                    envoieTrameAx12(trameEnvoie, selectionRxTx);
+                    trameStandard.commandeRegWriteAx(adresseDebut);
+                    trameStandard.creeTrameAx(trameEnvoie);
+                    envoieTrameAx12(trameEnvoie);
                     break;
                 case '4':
                     //commande action
-                    trameStandard=commandeActionAx(trameStandard);
-                    creeTrameAx(trameStandard,trameEnvoie);
-                    envoieTrameAx12(trameEnvoie, selectionRxTx);
+                    trameStandard.commandeActionAx(0xFE);
+                    trameStandard.creeTrameAx(trameEnvoie);
+                    envoieTrameAx12(trameEnvoie);
                     break;
                 case '5':
                     //commande reponse
@@ -51,17 +52,18 @@ void fonctionAx(char bufferenvoie[]){
                     trameStandard.parametres[0]=0x10;
                     trameStandard.parametres[1]=0x02;
                     trameStandard.nParametres=2;
-                    creeTrameAx(trameStandard,trameEnvoie);
-                    envoieTrameAx12(trameEnvoie, selectionRxTx);
+                    trameStandard.creeTrameAx(trameEnvoie);
+                    envoieTrameAx12(trameEnvoie);
                     break;
                 case '6':
                     //commande SyncWrite
-                    trameSyncWrite=commandeSyncWriteAx(trameStandard);
+                    trameStandard.commandeSyncWriteAx();
+                    trameSyncWrite=trameStandard;
                     break;
                 case '7':
                     //commande action SyncWrite
-                    creeTrameAx(trameStandard,trameEnvoie);
-                    envoieTrameAx12(trameEnvoie, selectionRxTx);
+                    trameSyncWrite.creeTrameAx(trameEnvoie);
+                    envoieTrameAx12(trameEnvoie);
                     break;
             }
         }
@@ -73,13 +75,13 @@ void fonctionAx(char bufferenvoie[]){
                 unsigned char mouvement;
                 case '0':
                 //commande marche avant
-                    mouvement = 127+commandeMouvementMoteur(trameStandard);   
+                    mouvement = 127+trameStandard.commandeMouvementMoteur();   
                     envoieMoteur(mouvement);
                     
                     break;
                 case '1':
                 //commande marche arriere
-                    mouvement = 127-commandeMouvementMoteur(trameStandard);   
+                    mouvement = 127-trameStandard.commandeMouvementMoteur();   
                     envoieMoteur(mouvement);
                     break;
             }
@@ -89,26 +91,24 @@ void fonctionAx(char bufferenvoie[]){
             switch (trameStandard.instruction){
                 case '0':
                         //commande read position ax-12
-                        trameStandard=commandeReadAx(trameStandard,0x1E,0x02);
-                        creeTrameAx(trameStandard,trameEnvoie);
-                        envoieTrameAx12(trameEnvoie, selectionRxTx);
+                        trameStandard.commandeReadAx(0x1E,0x02);
+                        trameStandard.creeTrameAx(trameEnvoie);
+                        envoieTrameAx12(trameEnvoie);
                         break;
                 case '1':
                         //commande read vitesse ax-12
-                        trameStandard=commandeReadAx(trameStandard,0x26,0x02);
-                        creeTrameAx(trameStandard,trameEnvoie);
-                        envoieTrameAx12(trameEnvoie, selectionRxTx);
+                        trameStandard.commandeReadAx(0x26,0x02);
+                        trameStandard.creeTrameAx(trameEnvoie);
+                        envoieTrameAx12(trameEnvoie);
                         break;
                 case '2':
                         //commande read capteur de pression
-                        trameStandard=commandePingPc(trameStandard);
-                        unsigned char test45;
+                        /*trameStandard=commandePingPc(trameStandard);
                         creeTramePc(trameStandard,trameEnvoie);
-                        pc.putc(0x99);
                         //test45=moyenne;
                         test45=15;
                         trameEnvoie[8];
-                        envoieTramePc(trameEnvoie);
+                        envoieTramePc(trameEnvoie);*/
                         
                        break;
             }
@@ -119,29 +119,29 @@ void fonctionAx(char bufferenvoie[]){
     //}
 }
 //--------------------------------------------------------------------------
-void fonctionPc(char test[]){
+/*void fonctionPc(char test[]){
 //selection fonction ax to pc
     if (checkSum2(0,test[1]+1,test)==test[test[1]+1]){ 
     //verification checksum
-        trame trameStandard;
-        trameStandard=trameAxToTrameStandard(test);
+        classAx12 trameStandard;
+        trameStandard.trameAxToTrameStandard(test);
         char trameEnvoie[50];
         if(trameStandard.parametres[0]==0x00){
             if (trameStandard.nParametres==1){
-                trameStandard=commandePingPc(trameStandard);
-                creeTramePc(trameStandard,trameEnvoie);
-                envoieTramePc(trameEnvoie);
+                trameStandard.commandePingPc();
+                trameStandard.creeTramePc(trameEnvoie);
+                envoieTramePc(pc,trameEnvoie);
             }
             else{
-                trameStandard=commandeReadPc(trameStandard);
-                creeTramePc(trameStandard,trameEnvoie);
-                envoieTramePc(trameEnvoie);
+                trameStandard.commandeReadPc();
+                trameStandard.creeTramePc(trameEnvoie);
+                envoieTramePc(pc,trameEnvoie);
             }
         }
         else{
-            trameStandard=commandeErrorPc(trameStandard);
-            creeTramePc(trameStandard,trameEnvoie);
-            envoieTramePc(trameEnvoie);
+            trameStandard.commandeErrorPc();
+            trameStandard.creeTramePc(trameEnvoie);
+            envoieTramePc(pc,trameEnvoie);
         }   
     }
-}
+}*/

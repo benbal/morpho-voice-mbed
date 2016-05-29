@@ -1,3 +1,6 @@
+#ifndef DEF_REGLAGE
+#define DEF_REGLAGE
+#include "mbed.h"
 /*
             reglage par defaut
 */
@@ -26,3 +29,4 @@
 //time
     //temps entre deux mesure de pression
         Ticker  tempsEcoule;
+#endif

@@ -71,11 +71,3 @@
         #define indexAdresseGoalPosition 0x1E;
     //vitesse
         #define indexAdresseMovingSpeed 0x20;
-//constantes 
-    //capteur de pression
-        // quantum conversion ADC Mbed 12bits
-        #define COEFF 0.0008056640;
-        //(1/Gain de l'ampli) / (quantum de conversion hPa = 18uV/0.06895hPa)
-        #define COEFF2 32.02481923;
-        //float temps En Seconde Attendu Entre Chaque Echantillon
-        //#define tempsEnSecondeAttenduEntreChaqueEchantillon = 0.1;
