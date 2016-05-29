@@ -8,6 +8,7 @@
 #include "variableGlobal.h"
 #include "reglage.h"
 #include "fonction.h"
+#include "commandeAx.h"
 #include "selectionfonction.h"
 int main() {
 memoireAx06.goalPosition.adresse=0x1e;
